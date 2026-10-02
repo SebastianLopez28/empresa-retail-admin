@@ -17,6 +17,7 @@ empresa-retail-admin/
 ├── modelo/
 │   └── empresa-retail-bd.mwb       # Modelo entidad-relación (MySQL Workbench)
 └── sql/
+    ├── 00_instalar_todo.sql        # Ejecuta 01 a 04 de una sola vez
     ├── 01_esquema.sql              # Base de datos, tablas y datos de ejemplo
     ├── 02_roles_usuarios.sql       # Creación de roles y usuarios
     ├── 03_permisos.sql             # GRANT por rol
@@ -55,7 +56,11 @@ El esquema se construyó a partir del modelo entidad-relación `modelo/empresa-r
 
 ## Cómo ejecutar
 
-Requiere MySQL 8.0 o superior y una cuenta con privilegios administrativos (por ejemplo `root`):
+Requiere MySQL 8.0 o superior y una cuenta con privilegios administrativos (por ejemplo `root`).
+
+**Opción rápida:** ejecutar `sql/00_instalar_todo.sql` (equivale a los scripts 01 a 04). En MySQL Workbench: *File > Open SQL Script*, elegir el archivo y pulsar el rayo.
+
+**Opción por pasos:**
 
 ```bash
 mysql -u root -p < sql/01_esquema.sql
