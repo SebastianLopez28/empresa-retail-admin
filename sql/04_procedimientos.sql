@@ -3,26 +3,27 @@
 -- Procedimientos almacenados de CONSULTA para el rol de auditoria.
 -- SQL SECURITY DEFINER: el procedimiento se ejecuta con los permisos de
 -- quien lo crea, por lo que marta solo necesita EXECUTE.
+-- Todos consultan unicamente la tabla conversion.
 -- =====================================================================
 
-USE empresa_retail;
+USE `empresa-retail-db`;
 
 DROP PROCEDURE IF EXISTS sp_conversiones_por_tipo;
 DROP PROCEDURE IF EXISTS sp_conversiones_por_rango;
-DROP PROCEDURE IF EXISTS sp_resumen_conversiones_campana;
+DROP PROCEDURE IF EXISTS sp_resumen_conversiones_mensual;
 
 DELIMITER $$
 
--- Total y cantidad de conversiones agrupadas por tipo
+-- Cantidad y valor total de conversiones agrupadas por tipo
 CREATE PROCEDURE sp_conversiones_por_tipo()
     SQL SECURITY DEFINER
     READS SQL DATA
 BEGIN
-    SELECT tipo,
-           COUNT(*)   AS cantidad,
-           SUM(valor) AS valor_total
-    FROM Conversiones
-    GROUP BY tipo
+    SELECT con_tipo          AS tipo,
+           COUNT(*)          AS cantidad,
+           SUM(con_valor)    AS valor_total
+    FROM conversion
+    GROUP BY con_tipo
     ORDER BY cantidad DESC;
 END$$
 
@@ -34,25 +35,24 @@ CREATE PROCEDURE sp_conversiones_por_rango(
     SQL SECURITY DEFINER
     READS SQL DATA
 BEGIN
-    SELECT id_conversion, id_cliente, id_campana, tipo, valor, fecha
-    FROM Conversiones
-    WHERE fecha BETWEEN p_desde AND p_hasta
-    ORDER BY fecha;
+    SELECT con_id_conversion, con_tipo, con_valor, con_fecha,
+           cliente_cli_id_cliente
+    FROM conversion
+    WHERE con_fecha BETWEEN p_desde AND p_hasta
+    ORDER BY con_fecha;
 END$$
 
--- Resumen de conversiones por campana
-CREATE PROCEDURE sp_resumen_conversiones_campana()
+-- Resumen mensual de conversiones
+CREATE PROCEDURE sp_resumen_conversiones_mensual()
     SQL SECURITY DEFINER
     READS SQL DATA
 BEGIN
-    SELECT c.id_campana,
-           c.nombre       AS campana,
-           COUNT(v.id_conversion) AS conversiones,
-           COALESCE(SUM(v.valor), 0) AS valor_total
-    FROM Campanas c
-    LEFT JOIN Conversiones v ON v.id_campana = c.id_campana
-    GROUP BY c.id_campana, c.nombre
-    ORDER BY valor_total DESC;
+    SELECT DATE_FORMAT(con_fecha, '%Y-%m') AS mes,
+           COUNT(*)                        AS conversiones,
+           SUM(con_valor)                  AS valor_total
+    FROM conversion
+    GROUP BY DATE_FORMAT(con_fecha, '%Y-%m')
+    ORDER BY mes;
 END$$
 
 DELIMITER ;
@@ -60,11 +60,11 @@ DELIMITER ;
 -- ---------------------------------------------------------------------
 -- Permiso de ejecucion para el rol de auditoria
 -- ---------------------------------------------------------------------
-GRANT EXECUTE ON PROCEDURE empresa_retail.sp_conversiones_por_tipo
+GRANT EXECUTE ON PROCEDURE `empresa-retail-db`.sp_conversiones_por_tipo
     TO 'rol_marta';
-GRANT EXECUTE ON PROCEDURE empresa_retail.sp_conversiones_por_rango
+GRANT EXECUTE ON PROCEDURE `empresa-retail-db`.sp_conversiones_por_rango
     TO 'rol_marta';
-GRANT EXECUTE ON PROCEDURE empresa_retail.sp_resumen_conversiones_campana
+GRANT EXECUTE ON PROCEDURE `empresa-retail-db`.sp_resumen_conversiones_mensual
     TO 'rol_marta';
 
 FLUSH PRIVILEGES;

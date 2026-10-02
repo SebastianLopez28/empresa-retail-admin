@@ -21,29 +21,29 @@ SHOW GRANTS FOR 'marta_auditoria'@'localhost' USING 'rol_marta';
 -- ---------------------------------------------------------------------
 
 -- ===== Sesion: mysql -u ana_crm -p =====
--- USE empresa_retail;
--- SELECT * FROM Clientes;                                  -- OK
--- UPDATE Clientes SET ciudad='Cali' WHERE id_cliente=1;    -- OK
--- INSERT INTO Interacciones (id_cliente,id_canal,tipo,detalle)
---        VALUES (1,1,'consulta','Prueba');                 -- OK
--- SELECT * FROM Campanas;                                  -- ERROR 1142 (sin permiso)
--- DELETE FROM Clientes WHERE id_cliente=1;                 -- ERROR 1142 (sin DELETE)
+-- USE `empresa-retail-db`;
+-- SELECT * FROM cliente;                                         -- OK
+-- UPDATE cliente SET cli_ciudad='Cali' WHERE cli_id_cliente=1;   -- OK
+-- INSERT INTO interaccion (int_tipo,int_fecha,campania_cam_id_campania,cliente_cli_id_cliente)
+--        VALUES ('clic','2026-10-01',1,1);                       -- OK
+-- SELECT * FROM campania;                                        -- ERROR 1142 (sin permiso)
+-- DELETE FROM cliente WHERE cli_id_cliente=1;                    -- ERROR 1142 (sin DELETE)
 
 -- ===== Sesion: mysql -u pedro_mkt -p =====
--- USE empresa_retail;
--- SELECT * FROM Clientes;                                  -- OK (solo lectura)
--- UPDATE Clientes SET ciudad='Cali' WHERE id_cliente=1;    -- ERROR 1142
--- INSERT INTO Campanas (nombre,id_canal,fecha_inicio,presupuesto)
---        VALUES ('Prueba',1,'2026-10-01',100000);          -- OK
--- UPDATE Canales SET activo=0 WHERE id_canal=4;            -- OK
--- SELECT * FROM Conversiones;                              -- ERROR 1142
+-- USE `empresa-retail-db`;
+-- SELECT * FROM cliente;                                         -- OK (solo lectura)
+-- UPDATE cliente SET cli_ciudad='Cali' WHERE cli_id_cliente=1;   -- ERROR 1142
+-- INSERT INTO campania (cam_nombre,cam_presupuesto,cam_fecha_inicio,cam_fecha_final,canal_can_id_canal)
+--        VALUES ('Prueba',100000,'2026-10-01','2026-10-31',1);   -- OK
+-- UPDATE canal SET can_nombre='Instagram Ads' WHERE can_id_canal=1; -- OK
+-- SELECT * FROM conversion;                                      -- ERROR 1142
 
 -- ===== Sesion: mysql -u marta_auditoria -p =====
--- USE empresa_retail;
--- SELECT * FROM Conversiones;                              -- OK
--- CALL sp_conversiones_por_tipo();                         -- OK
--- CALL sp_conversiones_por_rango('2026-01-01','2026-12-31'); -- OK
--- CALL sp_resumen_conversiones_campana();                  -- OK
--- SELECT * FROM Clientes;                                  -- ERROR 1142
--- INSERT INTO Conversiones (id_cliente,id_campana,tipo,valor,fecha)
---        VALUES (1,1,'compra',1000,'2026-10-01');          -- ERROR 1142
+-- USE `empresa-retail-db`;
+-- SELECT * FROM conversion;                                      -- OK
+-- CALL sp_conversiones_por_tipo();                               -- OK
+-- CALL sp_conversiones_por_rango('2026-01-01','2026-12-31');     -- OK
+-- CALL sp_resumen_conversiones_mensual();                        -- OK
+-- SELECT * FROM cliente;                                         -- ERROR 1142
+-- INSERT INTO conversion (con_tipo,con_valor,con_fecha,cliente_cli_id_cliente)
+--        VALUES ('compra',1000,'2026-10-01',1);                  -- ERROR 1142
