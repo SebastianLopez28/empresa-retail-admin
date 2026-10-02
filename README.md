@@ -1,0 +1,62 @@
+# empresa-retail-admin
+
+Configuración de seguridad (usuarios, roles y permisos) para la base de datos **`empresa_retail`**, dividiendo las responsabilidades entre tres perfiles de trabajo: gestión de clientes (Cajas / CRM), marketing e inventario de campañas, y gerencia / auditoría.
+
+## Objetivo
+
+Aplicar el **principio de mínimo privilegio** en MySQL 8: cada persona recibe únicamente los permisos que necesita para su función, usando roles en lugar de asignar privilegios usuario por usuario.
+
+## Estructura del repositorio
+
+```
+empresa-retail-admin/
+├── README.md
+├── .gitignore
+├── docs/
+│   └── Documento_Tecnico_Empresa_Retail.docx   # Informe técnico en formato APA 7
+└── sql/
+    ├── 01_esquema.sql              # Base de datos, tablas y datos de ejemplo
+    ├── 02_roles_usuarios.sql       # Creación de roles y usuarios
+    ├── 03_permisos.sql             # GRANT por rol
+    ├── 04_procedimientos.sql       # Procedimientos almacenados de consulta
+    └── 05_verificacion.sql         # Pruebas de permisos (SHOW GRANTS y casos)
+```
+
+## Ramas
+
+| Rama      | Contenido                                              |
+|-----------|--------------------------------------------------------|
+| `main`    | Rama estable (versión final aprobada).                 |
+| `develop` | Rama de trabajo donde queda la solución de la actividad. |
+
+## Modelo de datos
+
+Tablas principales de `empresa_retail`: `Clientes`, `Interacciones`, `Canales`, `Campanas` y `Conversiones` (compra, registro, suscripción).
+
+## Usuarios, roles y permisos
+
+| Usuario          | Rol              | Permisos                                                                                   |
+|------------------|------------------|--------------------------------------------------------------------------------------------|
+| `ana_crm`        | `rol_ana`        | `SELECT, INSERT, UPDATE` sobre `Clientes` e `Interacciones` (lectura y escritura).         |
+| `pedro_mkt`      | `rol_pedro`      | `SELECT, INSERT, UPDATE` sobre `Canales` y `Campanas`; solo `SELECT` sobre `Clientes`.     |
+| `marta_auditoria`| `rol_marta`      | `SELECT` sobre `Conversiones` y `EXECUTE` sobre procedimientos almacenados de consulta.    |
+
+## Cómo ejecutar
+
+Requiere MySQL 8.0 o superior y una cuenta con privilegios administrativos (por ejemplo `root`):
+
+```bash
+mysql -u root -p < sql/01_esquema.sql
+mysql -u root -p < sql/02_roles_usuarios.sql
+mysql -u root -p < sql/03_permisos.sql
+mysql -u root -p < sql/04_procedimientos.sql
+mysql -u root -p < sql/05_verificacion.sql
+```
+
+## Nota de seguridad
+
+Las contraseñas incluidas en `02_roles_usuarios.sql` son **de práctica académica**. En un entorno real deben generarse de forma segura, almacenarse en un gestor de secretos y no subirse al repositorio.
+
+## Autor
+
+Proyecto académico — administración de bases de datos (octubre de 2026).

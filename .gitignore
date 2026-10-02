@@ -1,0 +1,47 @@
+# ---- SQL / Bases de datos ----
+# Volcados y respaldos
+*.dump
+*.bak
+*.backup
+*.sql.gz
+*.sql.zip
+*.sql.bak
+*.sql.orig
+dump*.sql
+backup*.sql
+
+# Archivos de bases de datos locales
+*.sqlite
+*.sqlite3
+*.db
+*.mdf
+*.ldf
+*.ndf
+*.frm
+*.ibd
+*.MYD
+*.MYI
+
+# Registros
+*.log
+*.trace
+
+# Credenciales y configuracion local (nunca versionar contrasenas reales)
+.env
+.env.*
+*.cnf.local
+my.cnf
+credentials.sql
+secrets.sql
+
+# Editores y sistema operativo
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Temporales
+tmp/
+temp/
