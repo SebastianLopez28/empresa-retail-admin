@@ -18,7 +18,7 @@ empresa-retail-admin/
 │   └── empresa-retail-bd.mwb       # Modelo entidad-relación (MySQL Workbench)
 └── sql/
     ├── 00_instalar_todo.sql        # Ejecuta 01 a 04 de una sola vez
-    ├── 01_esquema.sql              # Base de datos, tablas y datos de ejemplo
+    ├── 01_esquema.sql              # Base de datos, tablas y datos de prueba
     ├── 02_roles_usuarios.sql       # Creación de roles y usuarios
     ├── 03_permisos.sql             # GRANT por rol
     ├── 04_procedimientos.sql       # Procedimientos almacenados de consulta
