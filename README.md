@@ -13,7 +13,8 @@ empresa-retail-admin/
 ├── README.md
 ├── .gitignore
 ├── docs/
-│   └── Documento_Tecnico_Empresa_Retail.docx   # Informe técnico en formato APA 7
+│   ├── Documento_Tecnico_Empresa_Retail.docx   # Informe técnico en formato APA 7
+│   └── evidencias/                 # Capturas de las pruebas con cada usuario
 ├── modelo/
 │   └── empresa-retail-bd.mwb       # Modelo entidad-relación (MySQL Workbench)
 └── sql/
